@@ -1,0 +1,29 @@
+---
+- name: Install packages
+  package:
+    name: "{{ webserver_packages }}"
+    state: latest
+
+- name: Add base NGINX configuration file
+  copy:
+    dest: /etc/nginx/nginx.conf
+    src: roles/webserver/etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: Reload NGINX
+- name: Add static site config files
+  template:
+    src: etc/nginx/conf.d/site.conf.j2
+    dest: "/etc/nginx/conf.d/{{ item.name }}.conf"
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ webserver_static_sites }}"
+  notify: Reload NGINX
+- name: Clone git repositories
+  git:
+    repo: "{{ item.repository}}"
+    dest: "{{ item.root }}"
+    force: yes
+  with_items: "{{ webserver_static_sites }}"

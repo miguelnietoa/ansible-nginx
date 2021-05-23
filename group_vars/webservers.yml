@@ -1,0 +1,5 @@
+webserver_static_sites:
+#    Add your web page info here like this:
+#  - name: miguelnietoa.codes
+#    root: /usr/share/nginx/miguelnietoa.codes
+#    repository: https://github.com/miguelnietoa/template.git
